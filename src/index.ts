@@ -139,10 +139,12 @@ class PromptArsiviServer {
                                 title: { type: "string", description: "Prompt başlığı" },
                                 description: { type: "string", description: "Prompt açıklaması" },
                                 content: { type: "string", description: "Prompt içeriği" },
+                                secret_key: { type: "string", description: "Yönetici şifresi (PROMPT_SECRET)" },
                             },
-                            required: ["id", "title", "content"],
+                            required: ["id", "title", "content", "secret_key"],
                         },
                     },
+
                     {
                         name: "list_prompts_json",
                         description: "Tüm promptları JSON formatında listeler (Resource listesinden daha detaylı)",
@@ -160,8 +162,18 @@ class PromptArsiviServer {
 
             if (request.params.name === "add_prompt") {
                 const args = request.params.arguments as any;
-                if (!args.id || !args.title || !args.content) {
+                if (!args.id || !args.title || !args.content || !args.secret_key) {
                     throw new McpError(ErrorCode.InvalidParams, "Missing required arguments");
+                }
+
+                const expectedSecret = process.env.PROMPT_SECRET;
+                if (!expectedSecret) {
+                    console.error("PROMPT_SECRET environment variable is not set");
+                    throw new McpError(ErrorCode.InternalError, "Server misconfigured: PROMPT_SECRET not set");
+                }
+
+                if (args.secret_key !== expectedSecret) {
+                    throw new McpError(ErrorCode.InvalidParams, "Invalid secret key");
                 }
 
                 if (this.prompts.find(p => p.id === args.id)) {
@@ -187,6 +199,8 @@ class PromptArsiviServer {
                     ]
                 };
             }
+
+
 
             if (request.params.name === "list_prompts_json") {
                 return {
