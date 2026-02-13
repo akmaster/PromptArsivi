@@ -1,0 +1,16 @@
+{
+  "prompts": [
+    {
+      "id": "deneme-prompt",
+      "title": "Deneme Promptu",
+      "description": "Bu bir deneme promptudur.",
+      "content": "Sen yardımsever bir asistansın. Lütfen bana yardım et."
+    },
+    {
+      "id": "kod-inceleme",
+      "title": "Kod İnceleme Uzmanı",
+      "description": "Kod incelemesi yapmak için kullanılan prompt.",
+      "content": "Sen kıdemli bir yazılım mühendisisin. Aşağıdaki kodu incele ve güvenlik, performans ve okunabilirlik açısından geri bildirim ver."
+    }
+  ]
+}
